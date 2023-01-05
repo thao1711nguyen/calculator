@@ -35,7 +35,7 @@ function operate(values){
             break;
         case '/':
             if(num2) result = Number(divide(num1,num2).toFixed(2));
-            else result = "ERROR!"
+            else result = NaN;
             break;        
     }
     if(!condition) {
@@ -91,7 +91,8 @@ equal.addEventListener('click', function() {
         }
         values.unshift(answer);
     }
-    if(typeof answer !== 'number') answer = "ERROR!";
+    
+    if(Number.isNaN(answer)) answer = "ERROR!";
     display(answer);
 });
 
