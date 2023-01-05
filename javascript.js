@@ -18,6 +18,11 @@ function operate(values){
     let num2 = Number(values[2]);
     let operator = values[1];
     let result = 0;
+    let condition = (Number.isInteger(num1) && Number.isInteger(num2)) ;
+    if(!condition) {
+        num1*=10;
+        num2*=10;
+    }
     switch(operator){
         case '+':
             result = add(num1,num2);
@@ -29,9 +34,12 @@ function operate(values){
             result = multiply(num1,num2);
             break;
         case '/':
-            if(num2) result = divide(num1,num2).toFixed(2);
+            if(num2) result = Number(divide(num1,num2).toFixed(2));
             else result = "ERROR!"
             break;        
+    }
+    if(!condition) {
+        result /= 10;
     }
     return result;
 }
@@ -70,7 +78,9 @@ equal.addEventListener('click', function() {
             values[i+1] = values[i].concat(values[i+1]);
             values.splice(i,1);
         } else i++;
+        
     }
+    
     
     
     let answer=Number(values[0]); //operation & display 
@@ -81,8 +91,7 @@ equal.addEventListener('click', function() {
         }
         values.unshift(answer);
     }
-    
-    if(typeof answer !== 'number') answer = "ERROR";
+    if(typeof answer !== 'number') answer = "ERROR!";
     display(answer);
 });
 
