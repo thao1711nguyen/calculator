@@ -28,7 +28,8 @@ function operate(values){
             return multiply(num1,num2);
             break;
         case '/':
-            return divide(num1,num2);
+            if(num2) return divide(num1,num2).toFixed(2);
+            else return "ERROR!"
             break;
             
     }
@@ -49,7 +50,7 @@ operands.forEach(button => button.addEventListener('click', function(e) {
 //perform calculations
 const equal = document.querySelector('.equal'); 
 equal.addEventListener('click', function() {
-    let pattern1 = /[x|\/]/;
+    let pattern1 = /[x|\/|.]/;
     let pattern2 = /[+|-]/;
     if(pattern1.test(values[0])) {
         display('ERROR!');
@@ -61,16 +62,17 @@ equal.addEventListener('click', function() {
         values.shift();
     }
     for(let i=0; i < values.length;){
-        let current = Number(values[i]);
-        let next = Number(values[i+1]);
-        if(!isNaN(current) && !isNaN(next)){
+        let current = values[i];
+        let next = values[i+1];
+        let pattern3 = /[0-9|.]/;
+        if(pattern3.test(current) && pattern3.test(next)){
             values[i+1] = values[i].concat(values[i+1]);
             values.splice(i,1);
         } else i++;
     }
     
     
-    let answer = values[0]; //operation
+    let answer=values[0]; //operation & display 
     while(values.length >=3){
         answer = operate(values);
         for(let i=0; i<3; i++){
@@ -78,6 +80,7 @@ equal.addEventListener('click', function() {
         }
         values.unshift(answer);
     }
+    if(typeof answer !== 'number') answer = "ERROR";
     display(answer);
 });
 
