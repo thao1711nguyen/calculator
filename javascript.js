@@ -49,17 +49,17 @@ operands.forEach(button => button.addEventListener('click', function(e) {
 //perform calculations
 const equal = document.querySelector('.equal'); 
 equal.addEventListener('click', function() {
-    // let pattern1 = /[x|\/]/;
-    // let pattern2 = /[+|-]/;
-    // if(pattern1.test(values[0])) {
-    //     display('ERROR!');
-    //     return;
-    // }
+    let pattern1 = /[x|\/]/;
+    let pattern2 = /[+|-]/;
+    if(pattern1.test(values[0])) {
+        display('ERROR!');
+        return;
+    }
 
-    // if(pattern2.test(values[0])) { //transform the array
-    //     values[1] = values[0].concat(values[1]);
-    //     values.shift();
-    // }
+    if(pattern2.test(values[0])) { //transform the array
+        values[1] = values[0].concat(values[1]);
+        values.shift();
+    }
     for(let i=0; i < values.length;){
         let current = Number(values[i]);
         let next = Number(values[i+1]);
@@ -70,7 +70,7 @@ equal.addEventListener('click', function() {
     }
     
     
-    let answer = 0; //operation
+    let answer = values[0]; //operation
     while(values.length >=3){
         answer = operate(values);
         for(let i=0; i<3; i++){
