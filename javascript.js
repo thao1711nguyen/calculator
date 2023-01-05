@@ -17,22 +17,23 @@ function operate(values){
     let num1 = Number(values[0]);
     let num2 = Number(values[2]);
     let operator = values[1];
+    let result = 0;
     switch(operator){
         case '+':
-            return add(num1,num2);
+            result = add(num1,num2);
             break;
         case '-':
-            return subtract(num1,num2);
+            result = subtract(num1,num2);
             break;
         case 'x':
-            return multiply(num1,num2);
+            result = multiply(num1,num2);
             break;
         case '/':
-            if(num2) return divide(num1,num2).toFixed(2);
-            else return "ERROR!"
-            break;
-            
+            if(num2) result = divide(num1,num2).toFixed(2);
+            else result = "ERROR!"
+            break;        
     }
+    return result;
 }
 const buttons = [...document.querySelectorAll('button')];
 const operands= buttons.filter(button => {
@@ -72,7 +73,7 @@ equal.addEventListener('click', function() {
     }
     
     
-    let answer=values[0]; //operation & display 
+    let answer=Number(values[0]); //operation & display 
     while(values.length >=3){
         answer = operate(values);
         for(let i=0; i<3; i++){
@@ -80,6 +81,7 @@ equal.addEventListener('click', function() {
         }
         values.unshift(answer);
     }
+    
     if(typeof answer !== 'number') answer = "ERROR";
     display(answer);
 });
@@ -93,9 +95,7 @@ function display(answer){
 const clear = document.querySelector('.clear');
 clear.addEventListener('click', (e) => {
     values.length = 0;
-    let displayDiv = document.querySelector('.display'); //display
-    displayDiv.textContent = '';
-
+    display('');
 });
 
 
