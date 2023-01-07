@@ -1,0 +1,22 @@
+body {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+}
+.content{
+    display: flex;
+    gap: 30px;
+}
+.number{
+    display: flex;
+}
+.display{
+    border: thin solid black;
+}
+.test{
+    display: block;
+    border: thin solid black;
+    padding: 30px;
+    margin: 30px;
+}
