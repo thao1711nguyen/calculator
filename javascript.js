@@ -49,17 +49,21 @@ const operands= buttons.filter(button => {
             && button.textContent !== 'Backspace');
 });
 
-const values = []; //store operands & operators
-operands.forEach(button => button.addEventListener('click', function(e) {
-    values.push(e.target.textContent); //store for operation
+
+//store operands & operators && display
+const values = []; 
+operands.forEach(button => button.addEventListener('click', (e) => store(e.target.textContent)));
+function store(operand) {
+    values.push(operand); 
     let displayCal = values.reduce((accumulator,value) => accumulator+value);
     display(displayCal);
-}));
+};
 
 
 //perform calculations
 const equal = document.querySelector('.equal'); 
-equal.addEventListener('click', function() {
+equal.addEventListener('click', result)
+function result() {
     let pattern1 = /[x|\/|.]/; //check the first number
     let pattern2 = /[+|-]/;
     if(pattern1.test(values[0])) {
@@ -82,41 +86,61 @@ equal.addEventListener('click', function() {
         
     }
     
-    
-    
-    let answer=Number(values[0]); //operation & display result
+    //operation & display result
+    let answer=Number(values[0]); 
     while(values.length >=3){
         answer = operate(values);
-        for(let i=0; i<3; i++){
-            values.shift();
-        }
+        values.splice(0,3); //remove the first three operands
         values.unshift(answer);
     }
     
     if(Number.isNaN(answer)) answer = "ERROR!";
     display(answer);
-});
+};
 
-function display(answer){
-    let displayDiv = document.querySelector('.display'); //display
-    displayDiv.textContent = answer;
+function display(calculations){
+    let displayDiv = document.querySelector('.display'); 
+    displayDiv.value = calculations;
+    
     
 }
 
 const clear = document.querySelector('.clear');
-clear.addEventListener('click', (e) => {
+clear.addEventListener('click', clearFunction);
+function clearFunction()  {
     values.length = 0;
     display('');
-});
+}
 
 const backspace = document.querySelector('.backspace');
-backspace.addEventListener('click', function() {
-    console.log(values);
+backspace.addEventListener('click', backspaceFunction);
+
+function backspaceFunction() {
     values.pop();
-    console.log(values);
     let displayCal = values.reduce((accumulator,value) => accumulator+value);
     display(displayCal);
-})
+}
+
+//Add keyboard support
+let displayDiv = document.querySelector('.display');
+displayDiv.addEventListener('keydown', keyBoardSupport);
+function keyBoardSupport(e) {
+    console.log(e.key);
+    let eKey = /[0-9|.|+|\-|x|\/]/;
+    if(eKey.test(e.key)) values.push(e.key);
+    else if(e.key === 'Backspace') {
+        if(values.length > 1) values.pop();
+        else clearFunction();
+    }
+    else if(e.key === '=') {
+        result();
+        e.preventDefault();
+    }
+    else e.preventDefault();
+    
+}
+
+
 
 
 
