@@ -2,47 +2,63 @@ function add(...args){
     return args.reduce((total,number) => total+number)
 }
 function subtract(...args){
-    return args.reduce((total,number) => total-number)
-    
+    return args.reduce((total,number) => total-number) 
 }
 function multiply(...args){
     return args.reduce((total,number) => total*number)
-    
 }
 function divide(...args){
     return args.reduce((total,number) => total/number)
-
 }
+ 
 function operate(values){
     let num1 = Number(values[0]);
     let num2 = Number(values[2]);
+    //check for decimals and transform them
+    let numberOfDecimal = checkDecimal(num1,num2);
+    let coefficient = Math.pow(10,numberOfDecimal);
+    num1*=coefficient;
+    num2*=coefficient;
+    
     let operator = values[1];
     let result = 0;
-    let condition = (Number.isInteger(num1) && Number.isInteger(num2)) ; //check if numbers have decimal
-    if(!condition) {
-        num1*=10;
-        num2*=10;
-    }
     switch(operator){
         case '+':
-            result = add(num1,num2);
+            result = add(num1,num2)/coefficient;
             break;
         case '-':
-            result = subtract(num1,num2);
+            result = subtract(num1,num2)/coefficient;
             break;
         case 'x':
-            result = multiply(num1,num2);
+            result = multiply(num1,num2)/(coefficient*coefficient);
             break;
         case '/':
-            if(num2) result = Number(divide(num1,num2).toFixed(2));
+            if(num2) result = divide(num1,num2);
             else result = NaN;
-            break;        
-    }
-    if(!condition) {
-        result /= 10;
+            break;
     }
     return result;
+
+
+    
 }
+
+function checkDecimal(num1,num2){
+    let n1=0;
+    let n2=0;
+    if(!Number.isInteger(num1)) {
+        num1 = num1.toString();
+        let index1 = num1.indexOf('.');
+        n1 = num1.slice(index1+1).length;
+    }
+    if(!Number.isInteger(num2)) {
+        num2 = num2.toString();
+        let index2 = num2.indexOf('.');
+        n2 = num2.slice(index2+1).length;
+    }
+    return (n1>n2 ? n1 : n2);
+}
+
 const buttons = [...document.querySelectorAll('button')];
 const operands= buttons.filter(button => {
     return (button.textContent!=='CLEAR' && button.textContent!=='='
@@ -53,6 +69,7 @@ const operands= buttons.filter(button => {
 //store operands & operators && display
 const values = []; 
 operands.forEach(button => button.addEventListener('click', (e) => store(e.target.textContent)));
+
 function store(operand) {
     values.push(operand); 
     let displayCal = values.reduce((accumulator,value) => accumulator+value);
@@ -66,12 +83,12 @@ equal.addEventListener('click', result)
 function result() {
     let pattern1 = /[x|\/|.]/; //check the first number
     let pattern2 = /[+|-]/;
-    if(pattern1.test(values[0])) {
+    if(Number.isNaN(values[0]) && pattern1.test(values[0])) {
         display('ERROR!');
         return;
     }
     
-    if(pattern2.test(values[0])) { //transform the array
+    if(Number.isNaN(values[0]) && pattern2.test(values[0])) { //transform the array
         values[1] = values[0].concat(values[1]);
         values.shift();
     }
@@ -93,8 +110,8 @@ function result() {
         values.splice(0,3); //remove the first three operands
         values.unshift(answer);
     }
-    
     if(Number.isNaN(answer)) answer = "ERROR!";
+    else answer = answer.toFixed(2);
     display(answer);
 };
 
@@ -117,8 +134,11 @@ backspace.addEventListener('click', backspaceFunction);
 
 function backspaceFunction() {
     values.pop();
+    if(values.length === 0) display('');
+    else {
     let displayCal = values.reduce((accumulator,value) => accumulator+value);
     display(displayCal);
+    }
 }
 
 //Add keyboard support
