@@ -83,12 +83,12 @@ equal.addEventListener('click', result)
 function result() {
     let pattern1 = /[x|\/|.]/; //check the first number
     let pattern2 = /[+|-]/;
-    if(Number.isNaN(values[0]) && pattern1.test(values[0])) {
+    if(isNaN(values[0]) && pattern1.test(values[0])) {
         display('ERROR!');
         return;
     }
     
-    if(Number.isNaN(values[0]) && pattern2.test(values[0])) { //transform the array
+    if(isNaN(values[0]) && pattern2.test(values[0])) { //transform the array
         values[1] = values[0].concat(values[1]);
         values.shift();
     }
@@ -160,7 +160,13 @@ function keyBoardSupport(e) {
     
 }
 
-
+//effect for buttons
+buttons.forEach(button => button.addEventListener('mouseover', (e) => {
+    button.classList.add('buttonEffect');
+}));
+buttons.forEach(button => button.addEventListener('mouseout', (e) => {
+    button.classList.remove('buttonEffect');
+}));
 
 
 
